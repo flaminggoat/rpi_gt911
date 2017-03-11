@@ -1,0 +1,36 @@
+// Enable gt911 touchscreen
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2708";
+
+    fragment@0 {
+        target = <&i2c1>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "okay";            
+            
+            gt911@14 {
+                compatible = "goodix,gt911";
+                reg = <0x14>;
+		reset-gpios = <&gpio 17 1>;
+                irq-gpios = <&gpio 27 1>;
+		interrupt-parent = <&gpio>;
+                interrupts = <27 0x1>; /* rising edge */
+                status = "okay";
+            };
+        };
+    };
+
+    fragment@1 {
+        target = <&gpio>;
+        __overlay__ {
+            gt911_pins: gt911_pins {
+                brcm,pins = <17 27>; /* GPIO */
+                brcm,function = <0 0>; /* input */
+            };
+        };
+    };
+};
